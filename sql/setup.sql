@@ -8,3 +8,8 @@ CREATE TABLE mics (
     input TEXT NOT NULL,
     price INT NOT NULL 
 );
+
+INSERT INTO
+    mics (name, input, price)
+VALUES
+    ('Rode Pod Mic', 'XLR', 100);

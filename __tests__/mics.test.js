@@ -17,6 +17,21 @@ async function createMic({ name, input, price }) {
   return new Mic(rows[0]);
 }
 
+async function getMicById(id) {
+  const { rows } = await pool.query(
+    `SELECT
+      *
+    FROM
+      mics
+    WHERE
+      id=$1
+    `,
+    [id]
+  );
+  if (!rows[0]) return null;
+  return new Mic(rows[0]);
+}
+
 describe('hands-of-resources routes', () => {
   beforeEach(() => {
     return setup(pool);
@@ -45,13 +60,30 @@ describe('hands-of-resources routes', () => {
   });
 
   it('find mic by ID', async () => {
+    const mic = await Mic.findById(1);
+    const resp = await request(app).get(`/api/v1/mics/${mic.id}`);
+
+    expect(resp.body).toEqual(mic);
+  });
+
+  it('Updates Mic by id', async () => {
     const mic = await createMic({
       name: 'Rode Pod Mic',
       input: 'XLR',
       price: 100,
     });
-    const resp = await request(app).get(`/api/v1/mics/${mic.id}`);
+    const resp = await request(app)
+      .patch(`/api/v1/mics/${mic.id}`)
+      .send({ price: 82 });
 
-    expect(resp.body).toEqual(mic);
+    const expected = {
+      id: expect.any(String),
+      name: 'Rode Pod Mic',
+      input: 'XLR',
+      price: 82,
+    };
+
+    expect(resp.body).toEqual(expected);
+    expect(await getMicById(mic.id)).toEqual(expected);
   });
 });

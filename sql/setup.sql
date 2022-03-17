@@ -6,5 +6,5 @@ CREATE TABLE mics (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name TEXT NOT NULL,
     input TEXT NOT NULL,
-    price TEXT NOT NULL 
+    price INT NOT NULL 
 );

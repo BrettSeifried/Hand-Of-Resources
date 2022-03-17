@@ -1,6 +1,6 @@
 # Hand-Of-Resources
 
-Creating a Api with PosgreSQL, Beekeeper, Haruko, and Thunder Client.
+Creating 5 APIs.
 
 ## Method
 
@@ -25,3 +25,10 @@ Creating a Api with PosgreSQL, Beekeeper, Haruko, and Thunder Client.
 [] games
 [] mice
 [] cars
+
+### Notes
+
+POST = Create
+GET = Read
+PATCH/PUT = Update
+DELETE = Delete

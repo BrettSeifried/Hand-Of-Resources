@@ -4,34 +4,6 @@ const request = require('supertest');
 const app = require('../lib/app');
 const Mic = require('../lib/models/Mics');
 
-async function createMic({ name, input, price }) {
-  const { rows } = await pool.query(
-    `INSERT INTO 
-      mics(name, input, price) 
-    VALUES 
-      ($1, $2, $3) 
-    RETURNING 
-      *;`,
-    [name, input, price]
-  );
-  return new Mic(rows[0]);
-}
-
-async function getMicById(id) {
-  const { rows } = await pool.query(
-    `SELECT
-      *
-    FROM
-      mics
-    WHERE
-      id=$1
-    `,
-    [id]
-  );
-  if (!rows[0]) return null;
-  return new Mic(rows[0]);
-}
-
 describe('hands-of-resources routes', () => {
   beforeEach(() => {
     return setup(pool);

@@ -20,7 +20,7 @@ Creating 5 APIs.
 
 ### Tables
 
-[] mics
+[x] mics
 [] keyboards
 [] games
 [] mice

@@ -18,9 +18,8 @@ describe('hands-of-resources routes', () => {
       input: 'XLR',
       price: 100,
     };
-    const resp = await request(app)
-      .post('/api/v1/mics')
-      .send({ name: 'Rode Pod Mic', input: 'XLR', price: 100 });
+    const resp = await request(app).post('/api/v1/mics').send(expected);
+
     expect(resp.body).toEqual({ id: expect.any(String), ...expected });
   });
 });

@@ -43,4 +43,15 @@ describe('hands-of-resources routes', () => {
 
     expect(resp.body).toEqual(expected);
   });
+
+  it('find mic by ID', async () => {
+    const mic = await createMic({
+      name: 'Rode Pod Mic',
+      input: 'XLR',
+      price: 100,
+    });
+    const resp = await request(app).get(`/api/v1/mics/${mic.id}`);
+
+    expect(resp.body).toEqual(mic);
+  });
 });

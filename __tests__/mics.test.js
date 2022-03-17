@@ -78,4 +78,10 @@ describe('hands-of-resources routes', () => {
 
     expect(resp.body).toEqual(expected);
   });
+
+  it('should be able to delete an order', async () => {
+    const mic = await Mic.findById(1);
+    const resp = await request(app).delete(`/api/v1/mics/${mic.id}`);
+    expect(resp.body).toEqual(mic);
+  });
 });

@@ -12,6 +12,12 @@ async function createMouse({ brand, name, price }) {
   return new Mice(rows[0]);
 }
 
+async function getMouseById(id) {
+  const { rows } = await pool.query('SELECT * FROM mice WHERE id=$1', [id]);
+  if (!rows[0]) return null;
+  return new Mice(rows[0]);
+}
+
 describe('hands-of-resources routes', () => {
   beforeEach(() => {
     return setup(pool);
@@ -57,5 +63,24 @@ describe('hands-of-resources routes', () => {
     const resp = await request(app).get(`/api/v1/mice/${mouse.id}`);
 
     expect(resp.body).toEqual(mouse);
+  });
+
+  it('should update a mouse', async () => {
+    const mouse = await createMouse({
+      brand: 'Logitech',
+      name: 'MX Master 3',
+      price: 80,
+    });
+    const resp = await request(app)
+      .patch(`/api/v1/mice/${mouse.id}`)
+      .send({ name: 'MX Master' });
+    const expected = {
+      id: expect.any(String),
+      brand: 'Logitech',
+      name: 'MX Master',
+      price: 80,
+    };
+    expect(resp.body).toEqual(expected);
+    expect(await getMouseById(mouse.id)).toEqual(expected);
   });
 });

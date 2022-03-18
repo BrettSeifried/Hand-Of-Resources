@@ -50,4 +50,15 @@ describe('hands-of-resources routes', () => {
       },
     ]);
   });
+
+  it('find a keyboard by id', async () => {
+    const keyboard = await createKeyboard({
+      brand: 'Logitech',
+      name: 'G915',
+      mech: true,
+    });
+    const resp = await request(app).get(`/api/v1/keyboards/${keyboard.id}`);
+
+    expect(resp.body).toEqual(keyboard);
+  });
 });

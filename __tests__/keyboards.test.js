@@ -3,6 +3,7 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const Keyboard = require('../lib/models/Keyboards');
+const { findKeyboardById } = require('../lib/models/Keyboards');
 
 async function createKeyboard({ brand, name, mech }) {
   const { rows } = await pool.query(
@@ -60,5 +61,25 @@ describe('hands-of-resources routes', () => {
     const resp = await request(app).get(`/api/v1/keyboards/${keyboard.id}`);
 
     expect(resp.body).toEqual(keyboard);
+  });
+
+  it('updates a keyboard by id', async () => {
+    const keyboard = await createKeyboard({
+      brand: 'Logitech',
+      name: 'G915',
+      mech: true,
+    });
+    const resp = await request(app)
+      .patch(`/api/v1/keyboards/${keyboard.id}`)
+      .send({ name: 'G915 TKL' });
+    const expected = {
+      id: expect.any(String),
+      brand: 'Logitech',
+      name: 'G915 TKL',
+      mech: true,
+    };
+
+    expect(resp.body).toEqual(expected);
+    expect(await findKeyboardById(keyboard.id)).toEqual(expected);
   });
 });

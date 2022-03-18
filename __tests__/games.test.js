@@ -71,7 +71,7 @@ describe('hands-of-resources routes', () => {
       rating: 9,
     });
     const resp = await request(app)
-      .patch(`/api/v1/orders/${game.id}`)
+      .patch(`/api/v1/games/${game.id}`)
       .send({ rating: 8 });
     const expected = {
       id: expect.any(String),
@@ -80,7 +80,7 @@ describe('hands-of-resources routes', () => {
       rating: 8,
     };
 
-    expect(res.body).toEqual(expected);
-    expect(await findGameById);
+    expect(resp.body).toEqual(expected);
+    expect(await findGameById(game.id)).toEqual(expected);
   });
 });

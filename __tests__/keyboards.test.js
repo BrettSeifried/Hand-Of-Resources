@@ -13,6 +13,14 @@ async function createKeyboard({ brand, name, mech }) {
   return new Keyboard(rows[0]);
 }
 
+async function getKeyBoardById(id) {
+  const { rows } = await pool.query('SELECT * FROM keyboards WHERE id=$1', [
+    id,
+  ]);
+  if (!rows[0]) return null;
+  return new Keyboard(rows[0]);
+}
+
 describe('hands-of-resources routes', () => {
   beforeEach(() => {
     return setup(pool);
@@ -81,5 +89,17 @@ describe('hands-of-resources routes', () => {
 
     expect(resp.body).toEqual(expected);
     expect(await findKeyboardById(keyboard.id)).toEqual(expected);
+  });
+
+  it('should be able to delete a Keyboard', async () => {
+    const keyboard = await createKeyboard({
+      brand: 'Logitech',
+      name: 'G915',
+      mech: true,
+    });
+    const resp = await request(app).delete(`/api/v1/keyboards/${keyboard.id}`);
+
+    expect(resp.body).toEqual(keyboard);
+    expect(await getKeyBoardById(keyboard.id)).toBeNull();
   });
 });

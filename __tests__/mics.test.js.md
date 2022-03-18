@@ -32,14 +32,14 @@ describe('hands-of-resources routes', () => {
   });
 
   it('find mic by ID', async () => {
-    const mic = await Mic.findById(1);
+    const mic = await Mic.findById(2);
     const resp = await request(app).get(`/api/v1/mics/${mic.id}`);
 
     expect(resp.body).toEqual(mic);
   });
 
   it('Updates Mic by id', async () => {
-    const resp = await request(app).patch('/api/v1/mics/1').send({ price: 82 });
+    const resp = await request(app).patch('/api/v1/mics/2').send({ price: 82 });
 
     const expected = {
       id: expect.any(String),
@@ -52,7 +52,7 @@ describe('hands-of-resources routes', () => {
   });
 
   it('should be able to delete an order', async () => {
-    const mic = await Mic.findById(1);
+    const mic = await Mic.findById(2);
     const resp = await request(app).delete(`/api/v1/mics/${mic.id}`);
     expect(resp.body).toEqual(mic);
   });

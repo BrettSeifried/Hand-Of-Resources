@@ -83,4 +83,16 @@ describe('hands-of-resources routes', () => {
     expect(resp.body).toEqual(expected);
     expect(await getMouseById(mouse.id)).toEqual(expected);
   });
+
+  it('Deletes a mouse from the db by id', async () => {
+    const mouse = await createMouse({
+      brand: 'Logitech',
+      name: 'MX Master',
+      price: 80,
+    });
+    const resp = await request(app).delete(`/api/v1/mice/${mouse.id}`);
+
+    expect(resp.body).toEqual(mouse);
+    expect(await getMouseById(mouse.id)).toBeNull();
+  });
 });

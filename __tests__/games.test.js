@@ -5,14 +5,6 @@ const app = require('../lib/app');
 const Game = require('../lib/models/Games');
 const { findGameById } = require('../lib/models/Games');
 
-async function createGame({ name, type, rating }) {
-  const { rows } = await pool.query(
-    'INSERT INTO games(name, type, rating) VALUES ($1, $2, $3) RETURNING *;',
-    [name, type, rating]
-  );
-  return new Game(rows[0]);
-}
-
 describe('hands-of-resources routes', () => {
   beforeEach(() => {
     return setup(pool);
@@ -65,7 +57,7 @@ describe('hands-of-resources routes', () => {
   });
 
   it('Update by ID', async () => {
-    const game = await createGame({
+    const game = await Game.insert({
       name: 'Elden Ring',
       type: 'RPG',
       rating: 9,
@@ -82,5 +74,17 @@ describe('hands-of-resources routes', () => {
 
     expect(resp.body).toEqual(expected);
     expect(await findGameById(game.id)).toEqual(expected);
+  });
+
+  it('should delete a game', async () => {
+    const game = await Game.insert({
+      name: 'Elden Ring',
+      type: 'RPG',
+      rating: 9,
+    });
+    const resp = await request(app).delete(`/api/v1/games/${game.id}`);
+
+    expect(resp.body).toEqual(game);
+    expect(await findGameById(game.id)).toBeNull();
   });
 });

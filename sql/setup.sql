@@ -2,6 +2,7 @@
 -- The SQL in this file will be executed when you run `npm run setup-db`
 DROP TABLE IF EXISTS mics;
 DROP TABLE IF EXISTS mice;
+DROP TABLE IF EXISTS keyboards;
 
 CREATE TABLE mics (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -15,6 +16,13 @@ CREATE TABLE mice (
     brand TEXT NOT NULL,
     name TEXT NOT NULL,
     price INT NOT NULL 
+);
+
+CREATE TABLE keyboards (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    brand TEXT NOT NULL,
+    name TEXT NOT NULL,
+    mech BOOLEAN 
 );
 
 INSERT INTO

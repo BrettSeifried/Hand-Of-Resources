@@ -23,7 +23,7 @@ Creating 5 APIs.
 [x] mics
 [] keyboards
 [] games
-[] mice
+[x] mice
 [] cars
 
 ### Notes

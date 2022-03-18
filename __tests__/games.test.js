@@ -51,4 +51,15 @@ describe('hands-of-resources routes', () => {
       },
     ]);
   });
+
+  it('get a list by id', async () => {
+    const game = await Game.insert({
+      name: 'Elden Ring',
+      type: 'RPG',
+      rating: 9,
+    });
+    const resp = await request(app).get(`/api/v1/games/${game.id}`);
+
+    expect(resp.body).toEqual(game);
+  });
 });

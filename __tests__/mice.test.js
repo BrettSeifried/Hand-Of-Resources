@@ -47,4 +47,15 @@ describe('hands-of-resources routes', () => {
       },
     ]);
   });
+
+  it('should find mouse by id', async () => {
+    const mouse = await createMouse({
+      brand: 'Logitech',
+      name: 'MX Master 3',
+      price: 80,
+    });
+    const resp = await request(app).get(`/api/v1/mice/${mouse.id}`);
+
+    expect(resp.body).toEqual(mouse);
+  });
 });

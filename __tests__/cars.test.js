@@ -48,4 +48,11 @@ describe('hands-of-resources routes', () => {
       },
     ]);
   });
+
+  it('find car by id', async () => {
+    const car = await createCar({ name: 'Mclaren', model: '720s' });
+    const resp = await request(app).get(`/api/v1/cars/${car.id}`);
+
+    expect(resp.body).toEqual(car);
+  });
 });

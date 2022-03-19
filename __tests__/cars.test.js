@@ -12,6 +12,12 @@ async function createCar({ name, model }) {
   return new Car(rows[0]);
 }
 
+async function getCarById(id) {
+  const { rows } = await pool.query('SELECT * FROM cars WHERE id=$1;', [id]);
+  if (!rows[0]) return null;
+  return new Car(rows[0]);
+}
+
 describe('hands-of-resources routes', () => {
   beforeEach(() => {
     return setup(pool);
@@ -54,5 +60,29 @@ describe('hands-of-resources routes', () => {
     const resp = await request(app).get(`/api/v1/cars/${car.id}`);
 
     expect(resp.body).toEqual(car);
+  });
+
+  it('should be able to update a car', async () => {
+    const car = await Car.insert({ name: 'Mclaren', model: '720s' });
+    const resp = await request(app)
+      .patch(`/api/v1/cars/${car.id}`)
+      .send({ model: 'GT' });
+
+    const expected = {
+      id: expect.any(String),
+      name: 'Mclaren',
+      model: 'GT',
+    };
+
+    expect(resp.body).toEqual(expected);
+    expect(await getCarById(car.id)).toEqual(expected);
+  });
+
+  it('should be able to delete an order', async () => {
+    const car = await Car.insert({ name: 'Mclaren', model: '720s' });
+    const resp = await request(app).delete(`/api/v1/cars/${car.id}`);
+
+    expect(resp.body).toEqual(car);
+    expect(await getCarById(car.id)).toBeNull();
   });
 });

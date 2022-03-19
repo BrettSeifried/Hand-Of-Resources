@@ -3,6 +3,7 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const Mic = require('../lib/models/Mics');
+const { findById } = require('../lib/models/Mics');
 
 describe('hands-of-resources routes', () => {
   beforeEach(() => {
@@ -32,14 +33,25 @@ describe('hands-of-resources routes', () => {
   });
 
   it('find mic by ID', async () => {
-    const mic = await Mic.findById(2);
+    const mic = await Mic.insert({
+      name: 'Rode Pod Mic',
+      input: 'XLR',
+      price: 100,
+    });
     const resp = await request(app).get(`/api/v1/mics/${mic.id}`);
 
     expect(resp.body).toEqual(mic);
   });
 
   it('Updates Mic by id', async () => {
-    const resp = await request(app).patch('/api/v1/mics/2').send({ price: 82 });
+    const mic = await Mic.insert({
+      name: 'Rode Pod Mic',
+      input: 'XLR',
+      price: 100,
+    });
+    const resp = await request(app)
+      .patch(`/api/v1/mics/${mic.id}`)
+      .send({ price: 82 });
 
     const expected = {
       id: expect.any(String),
@@ -49,10 +61,15 @@ describe('hands-of-resources routes', () => {
     };
 
     expect(resp.body).toEqual(expected);
+    expect(await findById(mic.id)).toEqual(expected);
   });
 
   it('should be able to delete an order', async () => {
-    const mic = await Mic.findById(2);
+    const mic = await Mic.insert({
+      name: 'Rode Pod Mic',
+      input: 'XLR',
+      price: 100,
+    });
     const resp = await request(app).delete(`/api/v1/mics/${mic.id}`);
     expect(resp.body).toEqual(mic);
   });
